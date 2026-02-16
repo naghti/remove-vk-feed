@@ -1,0 +1,15 @@
+li[data-testid="leftmenuitem"]:not(#l_pr):not(#l_msg) {
+  display: none;
+}
+
+.vkuiSeparator {
+  display: none;
+}
+
+#ads_wrapper {
+  display: none;
+}
+
+nav hr {
+  display: none;
+}
