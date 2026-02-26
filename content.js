@@ -1,22 +1,43 @@
-function redirectIfNeeded() {
-    if (location.pathname === '/feed') {
-        location.replace('/im');
+function createOverlay() {
+    if (document.getElementById('vk-feed-remover-overlay')) {
+        return;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'vk-feed-remover-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #141414;
+        z-index: 9999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    `;
+    document.documentElement.appendChild(overlay);
+}
+
+function removeOverlay() {
+    const overlay = document.getElementById('vk-feed-remover-overlay');
+    if (overlay) {
+        overlay.remove();
     }
 }
 
-redirectIfNeeded();
 
-const originalPushState = history.pushState;
-const originalReplaceState = history.replaceState;
+function checkAndApply() {
+    if (location.pathname !== '/im') {
+        createOverlay();
+        location.replace('/im');
+    } else {
+        removeOverlay();
+    }
+}
 
-history.pushState = function() {
-    originalPushState.apply(this, arguments);
-    redirectIfNeeded();
-};
+checkAndApply();
 
-history.replaceState = function() {
-    originalReplaceState.apply(this, arguments);
-    redirectIfNeeded();
-};
-
-window.addEventListener('popstate', redirectIfNeeded);
+window.addEventListener('popstate', checkAndApply);
